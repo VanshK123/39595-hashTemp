@@ -3,10 +3,12 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-node *_insnode(int key, float value);
+template <typename K, typename V>
+node<K, V> *_insnode(K key, V value);
 
 // Constructor
-hash_list::hash_list()
+template <typename K, typename V>
+hash_list<K, V>::hash_list()
 {
     size = 0;
     head = NULL;
@@ -15,13 +17,14 @@ hash_list::hash_list()
 }
 
 // Copy Constructor
-hash_list::hash_list(const hash_list &other)
+template <typename K, typename V>
+hash_list<K, V>::hash_list(const hash_list<K, V> &other)
 {
      size = 0;
      head = NULL;
      iter_ptr = NULL;
      //recreate new linked_list
-     node* cnode = other.head;
+     node<K, V>* cnode = other.head;
     
      while(cnode != NULL)
      {
@@ -32,15 +35,16 @@ hash_list::hash_list(const hash_list &other)
 }
 
 // Assignment operator
-hash_list &hash_list::operator=(const hash_list &other)
+template <typename K, typename V>
+hash_list<K, V> &hash_list<K, V>::operator=(const hash_list<K, V> &other)
 {
     
     if(head == other.head){
         return *this;
     }
     
-    hash_list Tempobject = hash_list(other);
-    node *ptr = NULL;
+    hash_list<K, V> Tempobject = hash_list(other);
+    node<K, V>* ptr = NULL;
     ptr = this -> head;
     this -> head = Tempobject.head;
     this -> size = Tempobject.size;
@@ -50,11 +54,12 @@ hash_list &hash_list::operator=(const hash_list &other)
 }
 
 // Insert Node Function
-void hash_list::insert(int key, float value)
+template <typename K, typename V>
+void hash_list<K, V>::insert(K key, V value)
 {
     // Find the head node, set current to head
-    node *current = head;
-    node *previousNode = head;
+    node<K, V>* current = head;
+    node<K, V>* previousNode = head;
     bool hasWritten = false;
 
     // Check if first, update head if is
@@ -98,9 +103,10 @@ void hash_list::insert(int key, float value)
 }
 
 // Get Value Function
-std::optional<float> hash_list::get_value(int key) const
+template <typename K, typename V>
+std::optional<V> hash_list<K, V>::get_value(K key) const
 {
-    node *current = head;
+    node<K, V>* current = head;
     while (current != NULL)
     {
         // finds
@@ -114,24 +120,26 @@ std::optional<float> hash_list::get_value(int key) const
     // std::cout << "(GETVALUE) Did not Find" << std::endl;
     return {};
 }
-node *_insnode(int key, float value)
+template <typename K, typename V>
+node<K, V>* _insnode(K key, V value)
 {
     // create node
-    node *newNode = new (node);
+    node<K, V>* newNode = new (node<K, V>);
     newNode->key = key;
     newNode->value = value;
     newNode->next = NULL;
     return newNode;
 }
 
-bool hash_list::remove(int key)
+template <typename K, typename V>
+bool hash_list<K, V>::remove(K key)
 {
-    node *current = head;
-    node *prev = head;
+    node<K, V>* current = head;
+    node<K, V>* prev = head;
 
     if (head != NULL && (head->key == key))
     {
-        node *temp = head;
+        node<K, V>* temp = head;
         head = head->next;
         delete temp;
         // std::cout << "(REMOVE) Did remove Head: "<< "Key: " << key  << std::endl;
@@ -165,15 +173,17 @@ bool hash_list::remove(int key)
     return false;
 }
 
-size_t hash_list::get_size() const
+template <typename K, typename V>
+size_t hash_list<K, V>::get_size() const
 {
     // std::cout << size << std::endl;
     return size;
 }
 
-hash_list::~hash_list()
+template <typename K, typename V>
+hash_list<K, V>::~hash_list()
 {
-    node *current;
+    node<K, V>* current;
 
     while (head != NULL)
     {
@@ -187,7 +197,8 @@ hash_list::~hash_list()
 }
 
 /** Dont modify this function for this lab. Leave it as is */
-void hash_list::reset_iter() {
+template <typename K, typename V>
+void hash_list<K, V>::reset_iter() {
     if(head == NULL){
         iter_ptr = NULL;
     }
@@ -201,7 +212,8 @@ void hash_list::reset_iter() {
      * of the list when this is called the iterator is set to NULL. If the iterator is NULL
      * when this function is called then this function does nothing
      */
-void hash_list::increment_iter() {
+    template <typename K, typename V>
+void hash_list<K, V>::increment_iter() {
     if(iter_ptr == NULL){
         return;
     }
@@ -213,7 +225,8 @@ void hash_list::increment_iter() {
 }
 
 /** Dont modify this function for this lab. Leave it as is */
-std::optional<std::pair<int *, float *>> hash_list::get_iter_value() {
+template <typename K, typename V>
+std::optional<std::pair<const K *, V *>> hash_list<K, V>::get_iter_value() {
 
     if(iter_ptr == NULL){
         return {};
@@ -223,15 +236,16 @@ std::optional<std::pair<int *, float *>> hash_list::get_iter_value() {
     {
         return {};
     }
-    int* ptrkey = &(iter_ptr->key);
-    float* ptrvalue = &(iter_ptr->value);
+    K* ptrkey = &(iter_ptr->key);
+    V* ptrvalue = &(iter_ptr->value);
 
 
     return std::make_pair(ptrkey, ptrvalue);
 }
 
 /** Dont modify this function for this lab. Leave it as is */
-bool hash_list::iter_at_end() {
+template <typename K, typename V>
+bool hash_list<K, V>::iter_at_end() {
     if(iter_ptr == NULL){
         return true;
     }
